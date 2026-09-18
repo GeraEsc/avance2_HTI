@@ -1,0 +1,34 @@
+==================================================
+ PIPELINE DE SEGURIDAD - avance2_HTI
+ Fecha: Fri Sep 18 03:48:48 UTC 2026
+==================================================
+
+--- Etapa 1: Escaneo de secretos (gitleaks) ---
+Umbral: bloquea si se detecta CUALQUIER secreto.
+
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+[90m3:48AM[0m [32mINF[0m scan completed in 24.9ms
+[90m3:48AM[0m [32mINF[0m no leaks found
+[OK] No se detectaron secretos.
+
+--- Etapa 2: Dependencias vulnerables (pip-audit) ---
+Umbral: bloquea si se encuentra cualquier CVE conocido.
+No known vulnerabilities found
+No known vulnerabilities found
+[OK] Sin vulnerabilidades conocidas en dependencias.
+
+--- Etapa 3: Lint de Dockerfile (hadolint) ---
+Umbral: bloquea con hallazgos de nivel error.
+Revisando app/api/Dockerfile
+Revisando app/moderador/Dockerfile
+[OK] Dockerfiles cumplen buenas practicas minimas.
+
+==================================================
+ VEREDICTO FINAL: PERMITIDO
+ Todas las etapas pasaron sus umbrales.
+==================================================

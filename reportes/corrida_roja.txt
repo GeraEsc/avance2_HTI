@@ -1,0 +1,84 @@
+==================================================
+ PIPELINE DE SEGURIDAD - avance2_HTI
+ Fecha: Fri Sep 18 03:38:05 UTC 2026
+==================================================
+
+--- Etapa 1: Escaneo de secretos (gitleaks) ---
+Umbral: bloquea si se detecta CUALQUIER secreto.
+
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+[90m3:38AM[0m [32mINF[0m scan completed in 16.4ms
+[90m3:38AM[0m [32mINF[0m no leaks found
+[OK] No se detectaron secretos.
+
+--- Etapa 2: Dependencias vulnerables (pip-audit) ---
+Umbral: bloquea si se encuentra cualquier CVE conocido.
+ERROR:pip_audit._virtual_env:internal pip failure:   error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [34 lines of output]
+      /tmp/pip-build-env-djeuaquc/overlay/lib/python3.14/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+      !!
+      
+              ********************************************************************************
+              Please consider removing the following classifiers in favor of a SPDX license expression:
+      
+              License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        self._finalize_license_expression()
+      running egg_info
+      writing psycopg2_binary.egg-info/PKG-INFO
+      writing dependency_links to psycopg2_binary.egg-info/dependency_links.txt
+      writing top-level names to psycopg2_binary.egg-info/top_level.txt
+      
+      Error: pg_config executable not found.
+      
+      pg_config is required to build psycopg2 from source.  Please add the directory
+      containing pg_config to the $PATH or specify the full executable path with the
+      option:
+      
+          python setup.py build_ext --pg-config /path/to/pg_config build ...
+      
+      or with the pg_config option in 'setup.cfg'.
+      
+      If you prefer to avoid building psycopg2 from source, please install the PyPI
+      'psycopg2-binary' package instead.
+      
+      For further information please check the 'doc/src/install.rst' file (also at
+      <https://www.psycopg.org/docs/install.html>).
+      
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'psycopg2-binary' when getting requirements to build wheel
+
+ERROR:pip_audit._cli:Failed to install packages: ['/tmp/tmpt9252rky/bin/python3', '-m', 'pip', 'install', '--no-input', '--keyring-provider=subprocess', '--dry-run', '--report', '/tmp/tmpc2ls4sfr/tmp3i3a8mp2', '-r', 'app/api/requirements.txt']
+Found 2 known vulnerabilities in 1 package
+Name  Version ID              Fix Versions
+----- ------- --------------- ------------
+flask 3.0.3   PYSEC-2026-2151 3.1.3
+flask 3.0.3   PYSEC-2026-2151 3.1.3
+[FALLA] Se encontraron vulnerabilidades conocidas en dependencias.
+
+--- Etapa 3: Lint de Dockerfile (hadolint) ---
+Umbral: bloquea con hallazgos de nivel error.
+Revisando app/api/Dockerfile
+Revisando app/moderador/Dockerfile
+[OK] Dockerfiles cumplen buenas practicas minimas.
+
+==================================================
+ VEREDICTO FINAL: BLOQUEADO
+ Etapas con hallazgos: 1
+
+- Dependencias vulnerables (pip-audit)
+==================================================

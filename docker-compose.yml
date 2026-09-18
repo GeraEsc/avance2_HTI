@@ -1,0 +1,16 @@
+services:
+  api:
+    build: ./app/api
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      MODERADOR_URL: http://moderador:5001
+    depends_on:
+      - moderador
+
+  moderador:
+    build: ./app/moderador
+    expose:
+      - "5001"
