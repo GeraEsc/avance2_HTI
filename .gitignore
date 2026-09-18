@@ -1,0 +1,7 @@
+# Nunca subas credenciales ni entornos locales
+.env
+*.pem
+venv/
+__pycache__/
+*.pyc
+bin/
