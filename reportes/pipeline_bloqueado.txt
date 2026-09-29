@@ -1,0 +1,96 @@
+==================================================
+ PIPELINE DE SEGURIDAD - avance2_HTI
+ Fecha: Tue Sep 29 17:57:41 UTC 2026
+==================================================
+
+--- Etapa 1: Escaneo de secretos (gitleaks) ---
+Umbral: bloquea si se detecta CUALQUIER secreto.
+
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+[90m5:57PM[0m [32mINF[0m scan completed in 42.9ms
+[90m5:57PM[0m [32mINF[0m no leaks found
+[OK] No se detectaron secretos.
+
+--- Etapa 2: Dependencias vulnerables (pip-audit) ---
+Umbral: bloquea si se encuentra cualquier CVE conocido.
+No known vulnerabilities found
+No known vulnerabilities found
+[OK] Sin vulnerabilidades conocidas en dependencias.
+
+--- Etapa 3: Lint de Dockerfile (hadolint) ---
+Umbral: bloquea con hallazgos de nivel error.
+Revisando app/api/Dockerfile
+Revisando app/moderador/Dockerfile
+[OK] Dockerfiles cumplen buenas practicas minimas.
+
+--- Etapa 4: Analisis estatico del codigo (Semgrep) ---
+Umbral: bloquea si Semgrep detecta un hallazgo configurado como ERROR.
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 115 files tracked by git with 1 Code rule:
+  Scanning 3 files.
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+
+Ran 1 rule on 3 files: 1 finding.
+                  
+                  
+┌────────────────┐
+│ 1 Code Finding │
+└────────────────┘
+                                         
+    app/moderador/vista_previa_resena.py 
+       flask-jinja-safe-filter-xss                                                                   
+          Posible XSS: se detecto uso de Jinja |safe. El contenido debe sanitizarse antes de marcarse
+          como seguro.                                                                               
+                                                                                                     
+           16┆ <div class="contenido">{{ contenido_formateado | safe }}</div>
+
+[FALLA] Semgrep detecto hallazgos de seguridad en el codigo.
+
+--- Etapa 5: Infraestructura como codigo (Trivy) ---
+Umbral: bloquea con hallazgos CRITICAL en infra/.
+2026-09-29T17:58:17Z	INFO	[misconfig] Misconfiguration scanning is enabled
+2026-09-29T17:58:17Z	INFO	[checks-client] Using existing checks from cache	path="/root/.cache/trivy/policy/content"
+2026-09-29T17:58:19Z	INFO	[terraform scanner] Scanning root module	file_path="."
+2026-09-29T17:58:19Z	WARN	[terraform parser] Variable values were not found in the environment or variable files. Evaluating may not work correctly.	module="root" variables="db_password"
+2026-09-29T17:58:19Z	INFO	Detected config files	num=2
+
+Report Summary
+
+┌─────────┬───────────┬───────────────────┐
+│ Target  │   Type    │ Misconfigurations │
+├─────────┼───────────┼───────────────────┤
+│ .       │ terraform │         0         │
+├─────────┼───────────┼───────────────────┤
+│ main.tf │ terraform │         0         │
+└─────────┴───────────┴───────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+📣 [34mNotices:[0m
+  - Version 0.74.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+
+[OK] Trivy no detecto hallazgos CRITICAL.
+
+==================================================
+ VEREDICTO FINAL: BLOQUEADO
+ Etapas con hallazgos: 1
+
+- Hallazgos de codigo inseguro (Semgrep)
+==================================================
