@@ -66,6 +66,34 @@ else
   echo "[OK] Dockerfiles cumplen buenas practicas minimas."
 fi
 
+# --- Etapa 4: Analisis estatico del codigo (Semgrep) ---
+echo ""
+echo "--- Etapa 4: Analisis estatico del codigo (Semgrep) ---"
+echo "Umbral: bloquea si Semgrep detecta un hallazgo configurado como ERROR."
+
+semgrep --config .semgrep.yml --error .
+if [ $? -ne 0 ]; then
+  echo "[FALLA] Semgrep detecto hallazgos de seguridad en el codigo."
+  FALLOS=$((FALLOS+1))
+  RESUMEN="$RESUMEN\n- Hallazgos de codigo inseguro (Semgrep)"
+else
+  echo "[OK] Semgrep no detecto hallazgos bloqueantes."
+fi
+
+# --- Etapa 5: Infraestructura como codigo (Trivy) ---
+echo ""
+echo "--- Etapa 5: Infraestructura como codigo (Trivy) ---"
+echo "Umbral: bloquea con hallazgos CRITICAL en infra/."
+
+trivy config --severity CRITICAL --exit-code 1 infra/
+if [ $? -ne 0 ]; then
+  echo "[FALLA] Trivy detecto hallazgos CRITICAL en infraestructura."
+  FALLOS=$((FALLOS+1))
+  RESUMEN="$RESUMEN\n- Infraestructura insegura (Trivy)"
+else
+  echo "[OK] Trivy no detecto hallazgos CRITICAL."
+fi
+
 # --- Veredicto final ---
 echo ""
 echo "=================================================="

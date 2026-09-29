@@ -1,0 +1,12 @@
+rules:
+  - id: flask-jinja-safe-filter-xss
+    languages:
+      - generic
+    paths:
+      include:
+        - "**/*.py"
+    message: >
+      Posible XSS: se detecto uso de Jinja |safe.
+      El contenido debe sanitizarse antes de marcarse como seguro.
+    severity: ERROR
+    pattern-regex: '\|\s*safe\b'
