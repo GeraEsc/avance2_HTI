@@ -4,10 +4,14 @@ import secrets
 import psycopg2
 import boto3
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
+@app.route("/")
+def inicio():
+    return render_template("index.html")
 
 DB_HOST = os.environ["DB_HOST"]
 DB_NAME = os.environ["DB_NAME"]
@@ -78,6 +82,21 @@ def usuario_actual():
 def salud():
     return jsonify({"status": "ok"}), 200
 
+@app.route("/vista-previa", methods=["POST"])
+def vista_previa():
+    contenido = request.form.get("contenido", "")
+
+    respuesta = requests.post(
+        f"{MODERADOR_URL}/moderacion/resenas/1/vista-previa",
+        data={"contenido": contenido},
+        timeout=5
+    )
+
+    return (
+        respuesta.text,
+        respuesta.status_code,
+        {"Content-Type": "text/html; charset=utf-8"}
+    )
 
 @app.route("/registro", methods=["POST"])
 def registro():
