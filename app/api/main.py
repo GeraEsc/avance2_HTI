@@ -339,13 +339,14 @@ def listar_hilos():
 
 @app.route("/hilos/<int:hilo_id>/comentarios", methods=["POST"])
 def crear_comentario(hilo_id):
-    usuario_id = usuario_actual()
+    usuario = usuario_actual()
 
-    if not usuario_id:
+    if not usuario:
         return jsonify({"error": "no autenticado"}), 401
 
-    data = request.get_json(force=True)
+    usuario_id = usuario["id"]
 
+    data = request.get_json(force=True)
     texto = data.get("texto")
 
     if not texto:
@@ -357,7 +358,6 @@ def crear_comentario(hilo_id):
             json={"texto": texto},
             timeout=5,
         )
-
         respuesta_moderador.raise_for_status()
         veredicto = respuesta_moderador.json()
 
@@ -404,22 +404,19 @@ def crear_comentario(hilo_id):
         s3.put_object(
             Bucket=S3_BUCKET,
             Key=f"moderacion/rechazados/{comentario_id}.json",
-            Body=json.dumps(
-                {
-                    "comentario_id": comentario_id,
-                    "hilo_id": hilo_id,
-                    "texto": texto,
-                    "motivo": veredicto.get("motivo"),
-                }
-            ),
+            Body=json.dumps({
+                "comentario_id": comentario_id,
+                "hilo_id": hilo_id,
+                "texto": texto,
+                "motivo": veredicto.get("motivo"),
+            }),
+            ContentType="application/json",
         )
 
-    return jsonify(
-        {
-            "id": comentario_id,
-            "estado": estado,
-        }
-    ), 201
+    return jsonify({
+        "id": comentario_id,
+        "estado": estado,
+    }), 201
 
 
 @app.route("/hilos/<int:hilo_id>/comentarios", methods=["GET"])
