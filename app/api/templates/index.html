@@ -6,211 +6,370 @@
 
     <title>Foro y Reseñas</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6f8;
-            color: #222;
-        }
-
-        header {
-            background: #24215f;
-            color: white;
-            padding: 20px 40px;
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        header p {
-            margin: 6px 0 0;
-            opacity: 0.85;
-        }
-
-        main {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            color: #24215f;
-            margin-top: 0;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 160px;
-            resize: vertical;
-            padding: 14px;
-            font-size: 16px;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 12px 22px;
-            border: none;
-            border-radius: 7px;
-            background: #24a148;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #198038;
-        }
-
-        .ayuda {
-            font-size: 14px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        #preview {
-            min-height: 100px;
-            padding: 20px;
-            background: #fafafa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .estado {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: #e6f4ea;
-            color: #137333;
-            font-size: 14px;
-        }
-
-        .ejemplo {
-            background: #eef0ff;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-        }
-
-        footer {
-            text-align: center;
-            color: #777;
-            padding: 25px;
-        }
-    </style>
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    >
 </head>
 
 <body>
 
-<header>
-    <h1>Foro y Reseñas</h1>
-    <p>Panel de moderación de contenido</p>
+<header class="topbar">
+    <div>
+        <h1>Foro y Reseñas</h1>
+        <p>LSCA2314 · Tema 4</p>
+    </div>
+
+    <div id="usuarioPanel" class="usuario-panel hidden">
+        <span id="usuarioActual"></span>
+        <button class="btn-secondary" onclick="cerrarSesion()">
+            Cerrar sesión
+        </button>
+    </div>
 </header>
 
-<main>
 
-    <div class="card">
-        <span class="estado">Servicio activo</span>
+<nav class="nav">
+    <button id="navForo" onclick="mostrarSeccion('foro')">
+        Foro
+    </button>
 
-        <h2>Vista previa de reseña</h2>
+    <button id="navModeracion" onclick="mostrarSeccion('moderacion')">
+        Moderación
+    </button>
 
-        <p>
-            Revisa cómo se mostrará la reseña antes de aprobarla.
-        </p>
+    <button
+        id="navAdmin"
+        class="hidden"
+        onclick="mostrarSeccion('admin')"
+    >
+        Panel Admin
+    </button>
 
-        <textarea
-            id="contenido"
-            placeholder="Escribe una reseña..."
-        >Esta es una **reseña excelente**.
+    <button id="btnAcceso" onclick="mostrarSeccion('acceso')">
+        Iniciar sesión
+    </button>
+</nav>
+
+
+<main class="contenedor">
+
+    <!-- ===================== -->
+    <!-- ACCESO -->
+    <!-- ===================== -->
+
+    <section id="acceso" class="seccion">
+
+        <div class="grid-2">
+
+            <div class="card">
+                <h2>Iniciar sesión</h2>
+
+                <label>Usuario</label>
+                <input
+                    id="loginUsuario"
+                    type="text"
+                    placeholder="Nombre de usuario"
+                >
+
+                <label>Contraseña</label>
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Contraseña"
+                >
+
+                <button class="btn-primary" onclick="login()">
+                    Iniciar sesión
+                </button>
+
+                <div id="loginMensaje" class="mensaje"></div>
+            </div>
+
+
+            <div class="card">
+                <h2>Registrarse</h2>
+
+                <label>Usuario</label>
+                <input
+                    id="registroUsuario"
+                    type="text"
+                    placeholder="Nombre de usuario"
+                >
+
+                <label>Correo</label>
+                <input
+                    id="registroEmail"
+                    type="email"
+                    placeholder="correo@ejemplo.com"
+                >
+
+                <label>Contraseña</label>
+                <input
+                    id="registroPassword"
+                    type="password"
+                    placeholder="Contraseña"
+                >
+
+                <button class="btn-primary" onclick="registrar()">
+                    Crear cuenta
+                </button>
+
+                <div id="registroMensaje" class="mensaje"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================== -->
+    <!-- FORO -->
+    <!-- ===================== -->
+
+    <section id="foro" class="seccion hidden">
+
+        <div class="encabezado-seccion">
+            <div>
+                <h2>Hilos del foro</h2>
+                <p>
+                    Publicaciones y reseñas almacenadas en PostgreSQL RDS.
+                </p>
+            </div>
+
+            <button
+                id="btnNuevoHilo"
+                class="btn-primary hidden"
+                onclick="alternarNuevoHilo()"
+            >
+                + Nuevo hilo
+            </button>
+        </div>
+
+
+        <div id="nuevoHiloCard" class="card hidden">
+
+            <h3>Crear nuevo hilo</h3>
+
+            <label>Título</label>
+            <input
+                id="nuevoTitulo"
+                type="text"
+                placeholder="Título del hilo"
+            >
+
+            <label>Categoría</label>
+            <input
+                id="nuevaCategoria"
+                type="text"
+                placeholder="Ej. Tecnología"
+            >
+
+            <button class="btn-primary" onclick="crearHilo()">
+                Publicar hilo
+            </button>
+
+            <div id="nuevoHiloMensaje" class="mensaje"></div>
+        </div>
+
+
+        <div id="listaHilos" class="lista-hilos">
+            <div class="card">
+                Cargando hilos...
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ===================== -->
+    <!-- DETALLE HILO -->
+    <!-- ===================== -->
+
+    <section id="detalle" class="seccion hidden">
+
+        <button
+            class="btn-secondary"
+            onclick="mostrarSeccion('foro')"
+        >
+            ← Volver al foro
+        </button>
+
+
+        <div class="card">
+            <h2 id="detalleTitulo"></h2>
+
+            <div class="meta">
+                <span id="detalleAutor"></span>
+                <span id="detalleCategoria"></span>
+                <span id="detalleFecha"></span>
+            </div>
+        </div>
+
+
+        <div class="card">
+
+            <h3>Calificar</h3>
+
+            <div id="estrellas" class="estrellas">
+                <button onclick="calificar(1)">★</button>
+                <button onclick="calificar(2)">★</button>
+                <button onclick="calificar(3)">★</button>
+                <button onclick="calificar(4)">★</button>
+                <button onclick="calificar(5)">★</button>
+            </div>
+
+            <div id="resumenCalificacion" class="resumen-calificacion">
+                Sin calificaciones todavía.
+            </div>
+
+            <div id="calificacionMensaje" class="mensaje"></div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Comentarios aprobados</h3>
+
+            <div id="listaComentarios">
+                Cargando comentarios...
+            </div>
+
+        </div>
+
+
+        <div id="nuevoComentarioCard" class="card hidden">
+
+            <h3>Publicar comentario</h3>
+
+            <textarea
+                id="nuevoComentario"
+                placeholder="Escribe tu comentario..."
+            ></textarea>
+
+            <button class="btn-primary" onclick="publicarComentario()">
+                Enviar comentario
+            </button>
+
+            <div id="comentarioMensaje" class="mensaje"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================== -->
+    <!-- MODERACION -->
+    <!-- ===================== -->
+
+    <section id="moderacion" class="seccion hidden">
+
+        <div class="card">
+
+            <span class="badge-ok">
+                Servicio de moderación activo
+            </span>
+
+            <h2>Vista previa de reseña</h2>
+
+            <p>
+                Revisa cómo se mostrará el contenido antes de aprobarlo.
+            </p>
+
+            <textarea
+                id="contenidoPreview"
+                placeholder="Escribe una reseña..."
+            >Esta es una **reseña excelente**.
 
 El contenido puede tener varias líneas.</textarea>
 
-        <p class="ayuda">
-            Puedes utilizar <strong>**texto**</strong> para mostrar negritas.
-        </p>
+            <p class="ayuda">
+                Usa <strong>**texto**</strong> para mostrar negritas.
+            </p>
 
-        <button onclick="generarPreview()">
-            Generar vista previa
-        </button>
-    </div>
+            <button
+                class="btn-primary"
+                onclick="generarPreview()"
+            >
+                Generar vista previa
+            </button>
 
-    <div class="card">
-        <h2>Resultado</h2>
-
-        <div id="preview">
-            La vista previa aparecerá aquí.
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Prueba de seguridad</h2>
-
-        <p>
-            La aplicación neutraliza etiquetas HTML proporcionadas por el usuario.
-        </p>
-
-        <div class="ejemplo">
-            &lt;img src=x onerror=alert(1)&gt;
         </div>
 
-        <button onclick="probarXSS()">
-            Probar entrada peligrosa
-        </button>
-    </div>
+
+        <div class="card">
+
+            <h2>Resultado</h2>
+
+            <div id="previewResultado" class="preview">
+                La vista previa aparecerá aquí.
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Demostración de seguridad</h2>
+
+            <p>
+                Comprueba que el contenido HTML proporcionado por el usuario
+                se muestra como texto y no se ejecuta.
+            </p>
+
+            <code>
+                &lt;img src=x onerror=alert(1)&gt;
+            </code>
+
+            <br>
+
+            <button
+                class="btn-security"
+                onclick="probarXSS()"
+            >
+                Probar entrada peligrosa
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================== -->
+    <!-- ADMINISTRACION -->
+    <!-- ===================== -->
+
+    <section id="admin" class="seccion hidden">
+
+        <div class="encabezado-seccion">
+            <div>
+                <h2>Panel de administración</h2>
+                <p>
+                    Moderación completa de comentarios y contenido.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Todos los comentarios</h3>
+
+            <div id="listaAdminComentarios">
+                Cargando comentarios...
+            </div>
+        </div>
+
+    </section>
 
 </main>
 
+
 <footer>
-    LSCA2314 · Tema 4 · Foro y Reseñas
+    Foro y Reseñas · Flask · PostgreSQL RDS · S3 · Docker
 </footer>
 
-<script>
-async function generarPreview() {
 
-    const contenido =
-        document.getElementById("contenido").value;
-
-    const datos = new URLSearchParams();
-    datos.append("contenido", contenido);
-
-    const respuesta = await fetch("/vista-previa", {
-        method: "POST",
-        headers: {
-            "Content-Type":
-                "application/x-www-form-urlencoded"
-        },
-        body: datos.toString()
-    });
-
-    const html = await respuesta.text();
-
-    document.getElementById("preview").innerHTML = html;
-}
-
-
-async function probarXSS() {
-
-    document.getElementById("contenido").value =
-        '<img src=x onerror=alert(1)>';
-
-    await generarPreview();
-}
-</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </body>
 </html>

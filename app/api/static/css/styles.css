@@ -1,0 +1,316 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+.topbar {
+    background: #211d5c;
+    color: white;
+    padding: 22px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h1 {
+    margin: 0;
+}
+
+.topbar p {
+    margin: 5px 0 0;
+    opacity: 0.8;
+}
+
+.usuario-panel {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 0 40px;
+    display: flex;
+    gap: 5px;
+}
+
+.nav button {
+    border: 0;
+    background: transparent;
+    padding: 16px 18px;
+    cursor: pointer;
+    color: #333;
+}
+
+.nav button:hover {
+    background: #f0f0f8;
+}
+
+.contenedor {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.seccion {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card h2,
+.card h3 {
+    color: #211d5c;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin: 14px 0 6px;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: 1px solid #cfd4dc;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-security {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 18px;
+    cursor: pointer;
+    margin-top: 14px;
+}
+
+.btn-primary {
+    background: #259b4b;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #197c38;
+}
+
+.btn-secondary {
+    background: #ececf4;
+    color: #333;
+}
+
+.btn-security {
+    background: #b3261e;
+    color: white;
+}
+
+.encabezado-seccion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.lista-hilos {
+    display: grid;
+    gap: 15px;
+}
+
+.hilo-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e0e4ea;
+    cursor: pointer;
+}
+
+.hilo-card:hover {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.hilo-card h3 {
+    margin: 0 0 10px;
+    color: #211d5c;
+}
+
+.meta {
+    color: #6b7280;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.comentario {
+    border-bottom: 1px solid #eee;
+    padding: 14px 0;
+}
+
+.comentario:last-child {
+    border-bottom: 0;
+}
+
+.badge-ok {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #166534;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.preview {
+    min-height: 90px;
+    padding: 18px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.ayuda {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.estrellas {
+    display: flex;
+    gap: 5px;
+}
+
+.estrellas button {
+    border: 0;
+    background: transparent;
+    font-size: 32px;
+    color: #f5b301;
+    cursor: pointer;
+}
+
+.mensaje {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.mensaje.ok {
+    color: #137333;
+}
+
+.mensaje.error {
+    color: #b3261e;
+}
+
+code {
+    display: inline-block;
+    margin-top: 8px;
+    background: #f0f1f4;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+}
+
+@media (max-width: 750px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        padding: 20px;
+    }
+
+    .nav {
+        padding: 0 10px;
+    }
+
+    .encabezado-seccion {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+.btn-danger {
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    background: #b3261e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #8c1d18;
+}
+
+.admin-acciones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.admin-comentario {
+    padding: 18px 0;
+}
+
+
+.estrellas button {
+    opacity: 0.4;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.estrellas button:hover,
+.estrellas button.seleccionada {
+    opacity: 1;
+}
+
+.estrellas button:hover {
+    transform: scale(1.15);
+}
+
+.resumen-calificacion {
+    margin-top: 12px;
+    color: #555;
+    font-size: 14px;
+}

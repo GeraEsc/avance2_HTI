@@ -4,7 +4,7 @@ from vista_previa_resena import vista_previa_bp
 app = Flask(__name__)
 app.register_blueprint(vista_previa_bp)
 
-PALABRAS_PROHIBIDAS = {"idiota", "estupido", "basura", "spam"}
+PALABRAS_PROHIBIDAS = {"idiota", "estupido", "basura", "spam", "imbecil"}
 LONGITUD_MINIMA = 3
 LONGITUD_MAXIMA = 2000
 
